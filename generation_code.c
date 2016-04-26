@@ -358,7 +358,7 @@ void parcour_opExp(n_exp *n) {
                 empile("$t2");
                 break;
             case egal:
-                printf("\tli\t$t2, -1\t\t# egal\n"
+                printf("\tli\t$t2, -1\t\t # egal\n"
                         "\tbeq\t$t0, $t1, e%d\n"
                         "\tli\t$t2, 0\n"
                         "e%d:\n", etiquette, etiquette);
@@ -366,7 +366,7 @@ void parcour_opExp(n_exp *n) {
                 empile("$t2");
                 break;
             case diff:
-                printf("\tli\t$t2, -1\t\t# diff\n"
+                printf("\tli\t$t2, -1\t\t # diff\n"
                         "\tbne\t$t0, $t1, e%d\n"
                         "\tli\t$t2, 0\n"
                         "e%d:\n", etiquette, etiquette);
@@ -374,7 +374,7 @@ void parcour_opExp(n_exp *n) {
                 empile("$t2");
                 break;
             case inf:
-                printf("\tli\t$t2, -1\t\t# inf\n"
+                printf("\tli\t$t2, -1\t\t # inf\n"
                         "\tblt\t$t0, $t1, e%d\n"
                         "\tli\t$t2, 0\n"
                         "e%d:\n", etiquette, etiquette);
@@ -482,7 +482,6 @@ void parcour_foncDec(n_dec * n) {
         affiche_dico();
     }
 
-
     if (trace_mips && retour == FALSE) {
         depile("$ra");
         depile("$fp");
@@ -492,13 +491,12 @@ void parcour_foncDec(n_dec * n) {
     retour = FALSE;
 
     sortie_fonction();
-
 }
 
 void parcour_varDec(n_dec * n) {
     int index = recherche_declarative(n->nom);
 
-    if (index < -1) {
+    if (index != -1) {
         gen_erreur_parcour("la variable %s est déjà déclarée", n->nom);
     }
 
@@ -507,7 +505,7 @@ void parcour_varDec(n_dec * n) {
             ajoute_identificateur(n->nom, contexte, T_ENTIER, nb_globale * TAILLE, -1);
             nb_globale++;
             if (trace_mips) {
-                printf("%s:\t.space\t4\n", n->nom);
+                printf("%s:\t.space\t%d\n", n->nom, TAILLE);
             }
             break;
         case C_VARIABLE_LOCALE:
@@ -524,7 +522,7 @@ void parcour_varDec(n_dec * n) {
 void parcour_tabDec(n_dec * n) {
     int index = recherche_declarative(n->nom);
 
-    if (index < -1) {
+    if (index != -1) {
         gen_erreur_parcour("le tableau %s est déjà déclarée", n->nom);
     }
 
@@ -557,13 +555,13 @@ void parcour_var_simple(n_var *n, int active) {
     if (trace_mips && active) {
         switch (dico.tab[index].classe) {
             case C_VARIABLE_GLOBALE:
-                printf("\tlw\t$t1, %s\t\t# lit variable dans $t1 (globale)\n", n->nom);
+                printf("\tlw\t$t1, %s\t\t # lit variable dans $t1 (globale)\n", n->nom);
                 break;
             case C_VARIABLE_LOCALE:
-                printf("\tlw\t$t1, %d($fp)\t\t# lit variable dans $t1 (locale)\n", -8 - dico.tab[index].adresse);
+                printf("\tlw\t$t1, %d($fp)\t\t # lit variable dans $t1 (locale)\n", -8 - dico.tab[index].adresse);
                 break;
             case C_ARGUMENT:
-                printf("\tlw\t$t1, %d($fp)\t\t# lit variable dans $t1 (argument)\n", 4 * nb_argument - dico.tab[index].adresse);
+                printf("\tlw\t$t1, %d($fp)\t\t # lit variable dans $t1 (argument)\n", 4 * nb_argument - dico.tab[index].adresse);
                 break;
         }
 
